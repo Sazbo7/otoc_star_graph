@@ -11,7 +11,7 @@ coupling_vals = np.linspace(0, 3, 13);
 length_vals = np.arange(10, 18, 1);
 
 count = 0;
-t_max, t_step, t_init, seed, periodic = 20, 1000, 0, None, False
+t_max, t_step, t_init, seed, periodic = 15, 400, 0, None, False
 
 for L in length_vals:
     t_max, t_init, values = run_OTOC(-1.0, 0.0, 1.05, coupling_vals, initial_state="Haar", t_max = t_max, t_step=t_step, t_init=t_init, seed=seed, L=L, periodic=periodic);
