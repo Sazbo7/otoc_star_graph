@@ -1,10 +1,7 @@
 from __future__ import print_function, division
 import sys,os
-from quspin.basis import spin_basis_1d,photon_basis # Hilbert space bases
 from quspin.operators import hamiltonian, quantum_operator # Hamiltonian and observables
 from quspin.tools.measurements import obs_vs_time # t_dep measurements
-from quspin.tools.Floquet import Floquet,Floquet_t_vec # Floquet Hamiltonian
-from quspin.basis.photon import coherent_state # HO coherent state
 import numpy as np # generic math functions
 from numpy.random import ranf,seed # pseudo random numbers
 from joblib import delayed,Parallel # parallelisation
@@ -12,7 +9,6 @@ from quspin.operators import exp_op # operators
 from quspin.basis import spin_basis_general # spin basis constructor
 from quspin.tools.measurements import ent_entropy # Entanglement Entropy
 import os
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
 from time import clock
 import matplotlib.pyplot as plt
 import scipy as sp
@@ -21,7 +17,7 @@ from qutip.piqs import *
 import pandas as pd
 from scipy.sparse import load_npz, save_npz
 
-qutip.Options(seeds=304940);
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 
 def OTOC_t(Hamiltonian, V_op, W_op, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12):
@@ -95,7 +91,7 @@ def generate_initial_state(L, initial_state='Haar', seed=None):
     return init_psi;
 
 
-def run_OTOC(J_zz, J_z, J_x, J_zzc, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic='False'):
+def run_OTOC(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic='False'):
 
     values = np.zeros([len(couplings), L+1, t_steps]);
     basis=spin_basis_1d(L=L+1);
@@ -139,7 +135,7 @@ def run_OTOC(J_zz, J_z, J_x, J_zzc, couplings, initial_state="Haar", t_max = 15,
 
 
 
-def run_entanglement_entropy(J_zz, J_z, J_x, J_zzc, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic='False'):
+def run_entanglement_entropy(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic='False'):
 
     entanglement_entropy = np.zeros([len(couplings), t_steps]);
     basis=spin_basis_1d(L=L+1);
