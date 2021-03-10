@@ -95,7 +95,7 @@ def generate_initial_state(L, initial_state='Haar', seed=None):
 
 def run_OTOC(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic=False):
 
-    values = np.zeros([len(couplings), L+1, t_steps]);
+    values = np.zeros([len(couplings), L+1, t_step]);
     basis=spin_basis_1d(L=L+1);
 
     if periodic:
