@@ -131,10 +131,9 @@ def run_OTOC(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step
             static=[["z",static_N]];
             W_op_N = hamiltonian(static,dynamic,dtype=np.float64,basis=basis,check_herm=False);
 
-            values[coupling,i] = OTOC_t(H, V_op_0, W_op_N, initial_state=initial_state, t_max = t_max, t_step=t_step, t_init=t_init, basis=None, seed=seed)
+            values[coupling,i] = OTOC_t(H, V_op_0, W_op_N, initial_state=initial_state, t_max = t_max, t_step=t_step, t_init=t_init, basis=None, seed=seed,L=L+1)
 
     return t_max, t_init, values;
-
 
 
 def run_entanglement_entropy(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic=False):
