@@ -1,6 +1,7 @@
 from __future__ import print_function, division
 import sys,os
 from quspin.operators import hamiltonian, quantum_operator # Hamiltonian and observables
+from quspin.basis import spin_basis_1d # Hilbert space bases
 from quspin.tools.measurements import obs_vs_time # t_dep measurements
 import numpy as np # generic math functions
 from numpy.random import ranf,seed # pseudo random numbers
@@ -73,13 +74,14 @@ def generate_initial_state(L, initial_state='Haar', seed=None):
         init_psi[0] = 1;
 
     elif initial_state == "pol_x":
-        init_psi = np.ones([2**L]);
+        init_psi = 1/np.sqrt(2**L) * np.ones([2**L]);
 
     elif initial_state == "pol_y":
         psi_y = [1.0, 1.0j];
         init_psi = psi_y;
         for i in range(L-1):
             init_psi = np.kron(init_psi, psi_y);
+        init_psi = 1/np.sqrt(2**L) * init_psi;
 
     elif initial_state == "InfT":
         init_psi = np.diagonal([2**L]);
@@ -137,11 +139,11 @@ def run_OTOC(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step
 
 def run_entanglement_entropy(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic=False):
 
-    entanglement_entropy = np.zeros([len(couplings), t_steps]);
+    entanglement_entropy = np.zeros([len(couplings), t_step]);
     basis=spin_basis_1d(L=L+1);
 
-    init_psi = generate_initial_state(L, initial_state=initial_state, seed=seed);
-    t = np.linspace(t_init, t_max, t_steps);
+    init_psi = generate_initial_state(L+1, initial_state=initial_state, seed=seed);
+    t = np.linspace(t_init, t_max, t_step);
 
     if periodic:
         BC = 0;
@@ -165,7 +167,8 @@ def run_entanglement_entropy(J_zz, J_z, J_x, couplings, initial_state="Haar", t_
         dynamic=[];
         H=hamiltonian(static,dynamic,dtype=np.float64,basis=basis,check_herm=False);
         psi_t = H.evolve(init_psi, t_init, t);
+
         for i in range(len(t)):
-            entanglement_entropy[coupling, i] = basis.ent_entropy(psi_t.T[i],sub_sys_A=range((L+1)//2));
+            entanglement_entropy[coupling, i] = ((L+1)//2) * basis.ent_entropy(psi_t.T[i],sub_sys_A=range((L+1)//2))["Sent_A"];
 
     return t_max, t_init, entanglement_entropy;
