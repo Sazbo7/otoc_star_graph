@@ -91,7 +91,7 @@ def generate_initial_state(L, initial_state='Haar', seed=None):
     return init_psi;
 
 
-def run_OTOC(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic='False'):
+def run_OTOC(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic=False):
 
     values = np.zeros([len(couplings), L+1, t_steps]);
     basis=spin_basis_1d(L=L+1);
@@ -135,7 +135,7 @@ def run_OTOC(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step
 
 
 
-def run_entanglement_entropy(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic='False'):
+def run_entanglement_entropy(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step=100, t_init=0, basis=None, seed=None, L=12, periodic=False):
 
     entanglement_entropy = np.zeros([len(couplings), t_steps]);
     basis=spin_basis_1d(L=L+1);
