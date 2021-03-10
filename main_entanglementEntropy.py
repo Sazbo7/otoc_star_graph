@@ -16,7 +16,7 @@ t_max, t_step, t_init, seed, periodic = 20, 1000, 0, None, False
 for L in length_vals:
     t_max, t_init, values = run_entanglement_entropy(-1.0, 0.0, 1.05, coupling_vals, initial_state="pol_y", t_max = t_max, t_step=t_step, t_init=t_init, seed=seed, L=L, periodic=periodic);
 
-    df = df.append({"L": L,"t_max":, "t_init":t_init, "t_step":t_step, "Jzz":-1.0, "Jx":1.05, "Jz":1.0, "Boundary": periodic, "Seed": seed, "Coupling": coupling_vals, "OTOC_t":values}, ignore_index=True);
+    df = df.append({"L": L,"t_max":, "t_init":t_init, "t_step":t_step, "Jzz":-1.0, "Jx":1.05, "Jz":1.0, "Boundary": periodic, "Seed": seed, "Coupling": coupling_vals, "Ent_Ent":values}, ignore_index=True);
     print(count)
     count+=1;
 
