@@ -1,22 +1,13 @@
 from __future__ import print_function, division
 import sys,os
-from quspin.operators import hamiltonian, quantum_operator # Hamiltonian and observables
-from quspin.basis import spin_basis_1d # Hilbert space bases
-from quspin.tools.measurements import obs_vs_time # t_dep measurements
+from quspin.operators import hamiltonian, quantum_operator, exp_op # Hamiltonian and observables
+from quspin.basis import spin_basis_1d, spin_basis_general # Hilbert space bases
+from quspin.tools.measurements import obs_vs_time, ent_entropy # t_dep measurements
 import numpy as np # generic math functions
 from numpy.random import ranf,seed # pseudo random numbers
 from joblib import delayed,Parallel # parallelisation
-from quspin.operators import exp_op # operators
-from quspin.basis import spin_basis_general # spin basis constructor
-from quspin.tools.measurements import ent_entropy # Entanglement Entropy
 import os
-from time import clock
-import matplotlib.pyplot as plt
-import scipy as sp
-from qutip import *
-from qutip.piqs import *
 import pandas as pd
-from scipy.sparse import load_npz, save_npz
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
@@ -108,23 +99,24 @@ def run_OTOC(J_zz, J_z, J_x, couplings, initial_state="Haar", t_max = 15, t_step
     H_x = [[J_x,i] for i in range(L)] # PBC
 
     for coupling in range(len(couplings)):
-        J_xxc, J_zc, J_xc = couplings[coupling], J_z, J_x;
+        J_zzc, J_zc, J_xc = couplings[coupling], J_z, J_x;
 
-        H_xxc = [[J_xxc / np.sqrt(L),i,L] for i in range(L)]
+        H_zzc = [[J_zzc,i,L] for i in range(L)]
         H_zc = [[J_zc,L]]
         H_xc = [[J_xc,L]]
 
         # define static and dynamics lists
-        static=[["zz",H_zz],["z",H_z],["x",H_x],["zz",H_xxc],["z",H_zc],["x",H_xc]];
+        static=[["zz",H_zz],["z",H_z],["x",H_x],["zz",H_zzc],["z",H_zc],["x",H_xc]];
         #static=[["zz",H_zz],["z",H_z],["x",H_x]];
         dynamic=[];
         H=hamiltonian(static,dynamic,dtype=np.float64,basis=basis,check_herm=False);
-        static_0 = [[1.0,0]];
+        static_0 = [[1.0,0]]; #OTOC calculated from initial site 0 (can change to any site but adjust distances i-j accordingly)
 
         static=[["z",static_0]];
         V_op_0 = hamiltonian(static,dynamic,dtype=np.float64,basis=basis,check_herm=False);
 
         #array = [1, 5, 10, 11];
+        #Calculates the OTOC for between first and all other sites
         for i in range(L):
         #for i in array:
             static_N = [[1.0,i]];
@@ -154,9 +146,9 @@ def run_entanglement_entropy(J_zz, J_z, J_x, couplings, initial_state="Haar", t_
     H_x = [[J_x,i] for i in range(L)] # PBC
 
     for coupling in range(len(couplings)):
-        J_xxc, J_zc, J_xc = couplings[coupling], J_z, J_x;
+        J_zzc, J_zc, J_xc = couplings[coupling], J_z, J_x;
 
-        H_xxc = [[J_xxc / np.sqrt(L),i,L] for i in range(L)]
+        H_zzc = [[J_zzc,i,L] for i in range(L)]
         H_zc = [[J_zc,L]]
         H_xc = [[J_xc,L]]
 
